@@ -1,11 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+import "./app/styles/index.css";
 import "tachyons";
-import App from "./App";
-import CardList from "./features/CardList";
+import App from "./app/App";
 import * as serviceWorker from "./serviceWorker";
-import { robots } from "./features/Robots";
 
 ReactDOM.render(
   <React.StrictMode>
