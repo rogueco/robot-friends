@@ -1,40 +1,51 @@
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import CardList from "../features/CardList";
 import SearchBox from "../features/SearchBox";
 import "../app/styles/app.css";
 import Scroll from "../features/Scroll";
 import ErrorBoundary from "../features/ErrorBoundary";
+import { setSearchField, requestRobots } from "./store/actions";
 
-const App = () => {
-  const [initialRobots, setInitialRobots] = useState([]);
-  const [searchfield, setSearchfield] = useState("");
-
-  function fetchData() {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((response) => setInitialRobots(response));
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const onSearchChange = (event) => {
-    setSearchfield(event.target.value);
+const mapStateToProps = (state) => {
+  return {
+    searchField: state.searchRobots.searchField,
+    robots: state.requestRobots.robots,
+    isPending: state.requestRobots.isPending,
+    error: state.requestRobots.error,
   };
-  const filteredRobots = initialRobots.filter((robot) => {
-    return robot.name.toLowerCase().includes(searchfield.toLowerCase());
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+    onRequestRobots: () => dispatch(requestRobots()),
+  };
+};
+
+const App = (props) => {
+  const {
+    searchField,
+    onSearchChange,
+    onRequestRobots,
+    robots,
+    isPending,
+  } = props;
+
+  const filteredRobots = robots.filter((robot) => {
+    console.log(robot);
+    return robot.name.toLowerCase().includes(searchField.toLowerCase());
   });
 
-  if (filteredRobots.length === 0) {
-    return (
-      <div className="tc">
-        <h1 className="f1">Loading</h1>
-      </div>
-    );
-  }
+  useEffect(() => {
+    onRequestRobots();
+  }, [onRequestRobots]);
 
-  return (
+  return isPending ? (
+    <div className="tc">
+      <h1 className="f1">Loading</h1>
+    </div>
+  ) : (
     <div className="tc">
       <h1 className="f1">RoboFriends</h1>
       <SearchBox searchChange={onSearchChange} />
@@ -47,4 +58,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
