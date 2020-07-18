@@ -1,3 +1,9 @@
+## Branches Available
+
+I have created an additional branch called 'Redux' - switch here to see the Redux implementation.
+
+##
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
